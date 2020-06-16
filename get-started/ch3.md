@@ -1,37 +1,37 @@
-# You Don't Know JS Yet: Get Started - 2nd Edition
-# Chapter 3: Digging to the Roots of JS
+# Vous ne connaissez pas encore JS : Débuter - 2nd Edition
+# Chapitre 3: Creuser jusqu'aux racines du JS
 
-If you've read Chapters 1 and 2, and taken the time to digest and percolate, you're hopefully starting to *get* JS a little more. If you skipped/skimmed them (especially Chapter 2), I recommend going back to spend some more time with that material.
+Si vous avez lu les chapitres 1 et 2 et pris le temps de les digérer un peu vous commencez probablement à *capter* JS un peu plus. Si vous les avez sauté ou survolé (surtout le chapitre 2), je vous recommence de revenir en arrière et de passer du temps sur ce matériau.
 
-In Chapter 2, we surveyed syntax, patterns, and behaviors at a high level. In this chapter, our attention shifts to some of the lower-level root characteristics of JS that underpin virtually every line of code we write.
+Dans le chapitre 2 nous avons arpenter la syntaxe, les modèles et les comportements à un haut niveau. Dans ce chapitre, notre attention portera plutôt vers les racines bas-niveau des caractéristiques du JS qui soutiennent chaque ligne de code écrite.
 
-Be aware: this chapter digs much deeper than you're likely used to thinking about a programming language. My goal is to help you appreciate the core of how JS works, what makes it tick. This chapter should begin to answer some of the "Why?" questions that may be cropping up as you explore JS. However, this material is still not an exhaustive exposition of the language; that's what the rest of the book series is for! Our goal here is still just to *get started*, and become more comfortable with, the *feel* of JS, how it ebbs and flows.
+Attention : ce chapitre creuse plus profondément dans le langage que ce dont vous avez l'habitude de voir en programmation. Mon but est de vous aider à apprécier le coeur du fonctionnement de JS, ce qui marque. Ce chapitre devrait commencer par la réponse à quelques "Pourquoi ?" qui ont peut-être émergées au gré de votre exploration du JS. Cependant, ce contenu n'est pas une présentation exhaustive du langage (l'ensemble des autres livres est là pour ça !). Notre but ici est de juste *débuter* pour devenir plus confortable avec le langage et son rythme, son comportement.
 
-Don't run so quickly through this material that you get lost in the weeds. As I've said a dozen times already, **take your time**. Even still, you'll probably finish this chapter with remaining questions. That's OK, because there's a whole book series ahead of you to keep exploring!
+Ne courrez pas trop vite à travers ce contenu pour ne pas vous y perdre. Comme je l'ai déjà dit, **prenez votre temps**. Même ainsi vous allez probablement terminer ce chapitre avec des questions en suspend. Ce n'est pas grave car il y a toute la série de livre devant vous qui n'attendent que vous !
 
-## Iteration
+## Itération
 
-Since programs are essentially built to process data (and make decisions on that data), the patterns used to step through the data have a big impact on the program's readability.
+Comme les programmes sont essentiellement construits pour traiter des données (et prendre des décisions sur ces données), les modèles utilisés pour le traitement ont un gros impact sur la lisibilité des programmes.
 
-The iterator pattern has been around for decades, and suggests a "standardized" approach to consuming data from a source one *chunk* at a time. The idea is that it's more common and helpful to iterate the data source—to progressively handle the collection of data by processing the first part, then the next, and so on, rather than handling the entire set all at once.
+Le modèle itérateur est présent depuis des décennies et suggère une approche standardisée pour consommer les données depuis une source un *chunk* à la fois. L'idée est qu'il est plus commun et pratique d'itérer la source de données pour progressivement gérer la collection de donnée en traitant la première partie, puis la suivante, etc. plutôt que de traiter tout l'ensemble en même temps.
 
-Imagine a data structure that represents a relational database `SELECT` query, which typically organizes the results as rows. If this query had only one or a couple of rows, you could handle the entire result set at once, and assign each row to a local variable, and perform whatever operations on that data that were appropriate.
+Imaginez une structure de donnée qui représente une requête `SELECT` d'une base de données relationnelle qui, organise généralement les résultats en lignes. Si la requête avait une seule ou quelques lignes, vous pourriez traiter le résultat en une seule fois et assigner chaque ligne à une variable locale et réaliser quelques opérations appropriées sur ces données.
 
-But if the query has 100 or 1,000 (or more!) rows, you'll need iterative processing to deal with this data (typically, a loop).
+Mais si la requête avait 100, 1000 (ou plus !) lignes, vous aurez besoin d'un traitement itératif pour traiter les données (généralement une boucle).
 
-The iterator pattern defines a data structure called an "iterator" that has a reference to an underlying data source (like the query result rows), which exposes a method like `next()`. Calling `next()` returns the next piece of data (i.e., a "record" or "row" from a database query).
+Le modèle itérateur définit une structure de donnée appelée un "itérateur" qui possède une référence à une source de données (comme les lignes du résultat de la requête) qui expose une méthode comme `next()`. `next()` retourne la prochaine donnée (c'est-à-dire un "enregistrement" ou une "ligne" de la requête de base de données).
 
-You don't always know how many pieces of data that you will need to iterate through, so the pattern typically indicates completion by some special value or exception once you iterate through the entire set and *go past the end*.
+Vous ne savez pas toujours combien de fois vous aurez besoin d'itérer une donnée donc le modèle indique généralement la fin du traitement par une valeur spécifique ou une exception une fois l'ensemble traité et la fin dépassée.
 
-The importance of the iterator pattern is in adhering to a *standard* way of processing data iteratively, which creates cleaner and easier to understand code, as opposed to having every data structure/source define its own custom way of handling its data.
+L'importance du modèle itérateur est dans l'adhésion à une façon *standard* de traiter la donnée itérativement qui crée une façon plus propre et simple de comprendre le code plutôt que d'avoir une façon de traiter chaque source/structure de données différemment.
 
-After many years of various JS community efforts around mutually agreed-upon iteration techniques, ES6 standardized a specific protocol for the iterator pattern directly in the language. The protocol defines a `next()` method whose return is an object called an *iterator result*; the object has `value` and `done` properties, where `done` is a boolean that is `false` until the iteration over the underlying data source is complete.
+Après de nombreuses années de différents efforts de la communauté JS autour d'une technique d'itération approuvée mutuellement, l'ES6 a standardisé un protocol spécifique pour le modèle itérateur directement dans le langage. Le protocole définit une méthode `next()` qui retourne un objet appelé *résultat d'itérateur*. Cet objet à les propriétés `value` et `done`, un booléen qui vaut `false` jusqu'à ce que l'itération soit complète.
 
-### Consuming Iterators
+### Consommer les itérateurs
 
-With the ES6 iteration protocol in place, it's workable to consume a data source one value at a time, checking after each `next()` call for `done` to be `true` to stop the iteration. But this approach is rather manual, so ES6 also included several mechanisms (syntax and APIs) for standardized consumption of these iterators.
+Avec le protocole d'itération mis en place par l'ES5, il est possible de traiter une source de données valeur par valeur, vérifiant après chaque appel `next()` si la valeur de `done` est `true` pour stoper l'itération. Cependant cette approche est plutôt manuelle, donc ES6 inclue plusieurs mécanismes (syntaxiques et des APIs) pour standardiser la consommation de ces itérateurs.
 
-One such mechanism is the `for..of` loop:
+L'un de ces mécanisme est la boucle `for..of` :
 
 ```js
 // given an iterator of some data source:
@@ -48,13 +48,13 @@ for (let val of it) {
 
 | NOTE: |
 | :--- |
-| We'll omit the manual loop equivalent here, but it's definitely less readable than the `for..of` loop! |
+| Nous allons omettre la boucle manuelle équivalente ici mais elle est définitivement moins lisble que la boucle `for..of` |
 
-Another mechanism that's often used for consuming iterators is the `...` operator. This operator actually has two symmetrical forms: *spread* and *rest* (or *gather*, as I prefer). The *spread* form is an iterator-consumer.
+Un autre mécanisme souvent utilisé pour consommer des itérateurs est l'opérateur `...`. Cet opérateur possède deux formes symétriques : *spread* et *rest* (ou collecter, comme je préfère). La forme *spread* est un consommeur d'itérateur.
 
-To *spread* an iterator, you have to have *something* to spread it into. There are two possibilities in JS: an array or an argument list for a function call.
+Pour *spread* un itérateur, vous devez avoir quelque chose à *spread* dedans. Il y a deux possibilités en JS : un tableau ou une liste d'arguments dans un appel de fonction.
 
-An array spread:
+Un *spread* de tableau :
 
 ```js
 // spread an iterator into an array,
@@ -63,7 +63,7 @@ An array spread:
 var vals = [ ...it ];
 ```
 
-A function call spread:
+Un *spread* d'appel de fonction :
 
 ```js
 // spread an iterator into a function,
@@ -72,19 +72,19 @@ A function call spread:
 doSomethingUseful( ...it );
 ```
 
-In both cases, the iterator-spread form of `...` follows the iterator-consumption protocol (the same as the `for..of` loop) to retrieve all available values from an iterator and place (aka, spread) them into the receiving context (array, argument list).
+Dans les deux cas, la forme de  `...` suit le protocole de consommation d'itérateur (comme la boucle `for..of`) pour retrouver toutes les valeurs disponibles depuis un itérateur pour les placer (alias *spread*) dans le contexte à la réception (tableau, liste d'arguments).
 
-### Iterables
+### Itérables
 
-The iterator-consumption protocol is technically defined for consuming *iterables*; an iterable is a value that can be iterated over.
+Le protocole de consommation d'itérateur est techniquement défini pour consommer des *itérables*, c'est-à-dire une valeur qui peut-être itérée.
 
-The protocol automatically creates an iterator instance from an iterable, and consumes *just that iterator instance* to its completion. This means a single iterable could be consumed more than once; each time, a new iterator instance would be created and used.
+Le protocole crée automatiquement une instance d'itérateur depuis un itérable et consommes *juste cette instance* jusqu'à sa complétion. Cela signifie qu'un seul itérable peut-être consommer plus d'une fois. A chaque fois, une nouvelle instance de l'itérateur sera créée et utilisée.
 
-So where do we find iterables?
+Où trouve-t-on les itérables ?
 
-ES6 defined the basic data structure/collection types in JS as iterables. This includes strings, arrays, maps, sets, and others.
+ES6 définie la structure/collection des types de données basiques comme des itérables. Cela inclut les *strings*, les tableaux, les *maps*, les *sets*, etc.
 
-Consider:
+Considérez :
 
 ```js
 // an array is an iterable
@@ -97,14 +97,13 @@ for (let val of arr) {
 // Array value: 20
 // Array value: 30
 ```
-
-Since arrays are iterables, we can shallow-copy an array using iterator consumption via the `...` spread operator:
+Comme les tableaux sont des itérables, nous pouvons faire une copie superficielle du tableau en consommant l'itérateur via l'opérateur de *spread* `...` :
 
 ```js
 var arrCopy = [ ...arr ];
 ```
 
-We can also iterate the characters in a string one at a time:
+Nous pouvons aussi itérer les caractères dans une *string* un par un :
 
 ```js
 var greeting = "Hello world!";
@@ -115,9 +114,9 @@ chars;
 //   "w", "o", "r", "l", "d", "!" ]
 ```
 
-A `Map` data structure uses objects as keys, associating a value (of any type) with that object. Maps have a different default iteration than seen here, in that the iteration is not just over the map's values but instead its *entries*. An *entry* is a tuple (2-element array) including both a key and a value.
+Une structure de donnée `Map` utilise des objets comme clés, associant une valeur (de n'importe quel type) a un objet. Les *Maps* ont une itération par défaut différente que celle vue jusque là dans le sens où cette itération ne se fait pas seulement sur chacune de ses valeurs mais plutôt sur chaque *entrées*. Une *entrée* est un *tuple* (un tableau de deux éléments) incluant à la fois la clé et la valeur.
 
-Consider:
+Considérez :
 
 ```js
 // given two DOM elements, `btn1` and `btn2`
@@ -133,9 +132,9 @@ for (let [btn,btnName] of buttonNames) {
 }
 ```
 
-In the `for..of` loop over the default map iteration, we use the `[btn,btnName]` syntax (called "array destructuring") to break down each consumed tuple into the respective key/value pairs (`btn1` / `"Button 1"` and `btn2` / `"Button 2"`).
+Dans la boucle `for..of` sur l'itération par défaut du *map*, on utilise la syntaxe `[btn,btnName]` (appellée "déstructuration de tableau") pour casser chaque *tuple* consommé en une paire clé/valeur (`btn1` / `"Button 1"` et `btn2` / `"Button 2"`).
 
-Each of the built-in iterables in JS expose a default iteration, one which likely matches your intuition. But you can also choose a more specific iteration if necessary. For example, if we want to consume only the values of the above `buttonNames` map, we can call `values()` to get a values-only iterator:
+Chacun des itérateurs intégrés à JS expose une itération par défaut qui devrait probablement correspondre à votre intuition. Cependant vous pouvez aussi choisir une itération spécifique si nécessaire. Par exemple, si nous voulons consommer seulement les valeurs sur le *map* `buttonNames`, nous pouvons appeler `values()` pour avoir un itérateur uniquement sur les valeurs :
 
 ```js
 for (let btnName of buttonNames.values()) {
@@ -145,7 +144,7 @@ for (let btnName of buttonNames.values()) {
 // Button 2
 ```
 
-Or if we want the index *and* value in an array iteration, we can make an entries iterator with the `entries()` method:
+Ou si nous voulions l'index et la valeur sur une itération de tableau, on pourrait utiliser un itérateur d'entrées avec la méthode `entries()` :
 
 ```js
 var arr = [ 10, 20, 30 ];
@@ -158,29 +157,29 @@ for (let [idx,val] of arr.entries()) {
 // [2]: 30
 ```
 
-For the most part, all built-in iterables in JS have three iterator forms available: keys-only (`keys()`), values-only (`values()`), and entries (`entries()`).
+Pour la majeure partie, tous les itérateurs intégrés dans JS ont trois formes d'itérateurs possible : clés seules (`keys()`), valeurs seules (`values()`), et entrées (`entries()`).
 
-Beyond just using built-in iterables, you can also ensure your own data structures adhere to the iteration protocol; doing so means you opt into the ability to consume your data with `for..of` loops and the `...` operator. "Standardizing" on this protocol means code that is overall more readily recognizable and readable.
+Au delà des itérateurs intégrés, vous pouvez aussi vous assurer que votre structure de données adhère au protocole d'itération. Se faisant vous optez pour la possibilité de consommer votre donnée avec la boucle `for..of` ou l'opérateur `...`. "Standardiser" sur le protocole signifie que votre code est dans l'ensemble plus lisible.
 
 | NOTE: |
 | :--- |
-| You may have noticed a nuanced shift that occurred in this discussion. We started by talking about consuming **iterators**, but then switched to talking about iterating over **iterables**. The iteration-consumption protocol expects an *iterable*, but the reason we can provide a direct *iterator* is that an iterator is just an iterable of itself! When creating an iterator instance from an existing iterator, the iterator itself is returned. |
+| Vous avez peut-être remarqué un changement nuancé dans cette présentation. Nous avons commencé à parler de consommation **d'itérateurs** pour ensuite parler d'itération sur des **itérables**. Le protocole de consommation d'itération a besoin d'un *itérable* mais la raison pour laquelle nous pouvons fournir directement un *itérateur* est qu'un itérateur est juste un itérable de lui même ! Quand on crée une instance d'itérateur depuis un itérateur existant, l'itérateur lui même est retourné. |
 
 ## Closure
 
-Perhaps without realizing it, almost every JS developer has made use of closure. In fact, closure is one of the most pervasive programming functionalities across a majority of languages. It might even be as important to understand as variables or loops; that's how fundamental it is.
+Sans doute sans s'en rendre compte, presque tous les développeurs JS ont utilisé des *closures*. En fait, la *closure* est l'une des fonctionnalités de programmation les plus répandues dans une majorité de langages. C'est peut-être même aussi important à comprendre qu'une variable ou une boucle. C'est aussi fondamental que ça.
 
-Yet it feels kind of hidden, almost magical. And it's often talked about in either very abstract or very informal terms, which does little to help us nail down exactly what it is.
+Pourtant cela semble caché, presque magique et c'est souvent abordé de façon très abstraite ou dans des termes très informels qui n'aident pas plus que ça à comprendre ce que c'est.
 
-We need to be able to recognize where closure is used in programs, as the presence or lack of closure is sometimes the cause of bugs (or even the cause of performance issues).
+Nous devons être capable de reconnaître quand une *closure* est utilisée dans les programmes comme le manque de présence de *closure* cause parfois des bugs (ou des problèmes de performances).
 
-So let's define closure in a pragmatic and concrete way:
+Définissons concrètement une *closure* de façon pragmatique :
 
-> Closure is when a function remembers and continues to access variables from outside its scope, even when the function is executed in a different scope.
+> Une *closure* est quand une fonction se souvient et continue d'accéder aux variables provenant des portées extérieures même quand cette fonction est éxécutée dans une portée différente.
 
-We see two definitional characteristics here. First, closure is part of the nature of a function. Objects don't get closures, functions do. Second, to observe a closure, you must execute a function in a different scope than where that function was originally defined.
+Nous identifions deux caractéristiques différentes ici. D'abord que la *closure* fait partie de la nature d'une fonction. Les objets n'ont pas de *closures*, les fonctions oui. Deuxièmement, pour observer une *closure*, il faut éxécuter une fonction dans une portée différente de là où elle a été originellement définie.
 
-Consider:
+Considérez :
 
 ```js
 function greeting(msg) {
@@ -202,11 +201,11 @@ howdy("Grant");
 // Howdy, Grant!
 ```
 
-First, the `greeting(..)` outer function is executed, creating an instance of the inner function `who(..)`; that function closes over the variable `msg`, which is the parameter from the outer scope of `greeting(..)`. When that inner function is returned, its reference is assigned to the `hello` variable in the outer scope. Then we call `greeting(..)` a second time, creating a new inner function instance, with a new closure over a new `msg`, and return that reference to be assigned to `howdy`.
+D'abord la fonction extérieure `greeting(..)` est éxécutée, créant une instance de la fonction intérieure `who(..)`. Cette fonction ferme sur la variable `msg` qui est le paramètre provenant de la fonction extérieure `greeting(..)`. Quand la fonction intérieure est retournée, sa référence est assignée à la variable `hello` dans la portée extérieure. Ensuite nous appelons `greeting(..)` une deuxième fois, créant une nouvelle instance de la fonction intérieure avec une nouvelle *closure* sur une nouveau `msg` et retourne cette référence pour être assignée à `howdy`.
 
-When the `greeting(..)` function finishes running, normally we would expect all of its variables to be garbage collected (removed from memory). We'd expect each `msg` to go away, but they don't. The reason is closure. Since the inner function instances are still alive (assigned to `hello` and `howdy`, respectively), their closures are still preserving the `msg` variables.
+Quand la fonction `greeting(..)` termine son éxécution, nous devrions normalement nous attendre à ce que toutes ses variables soient ramassées (retirées de la mémoire). Nous devrions nous attendre à ce que chaque `msg` s'en aille, mais en fait non. La raison est la *closure*. Comme les instances de la fonction intérieure sont toujours en vie (assignées respectivement à `hello` et `howdy`), leurs *closures* préservent toujours les variables `msg`.
 
-These closures are not a snapshot of the `msg` variable's value; they are a direct link and preservation of the variable itself. That means closure can actually observe (or make!) updates to these variables over time.
+Ces *closures* ne sont pas des instantanés de la valeur de la variable `msg`, elles sont un lien direct et préservé de la variable elle même. Cela signifie que la *closure* peut réellement observer (ou faire !) des mises à jour de ces variables dans le temps.
 
 ```js
 function counter(step = 1) {
@@ -228,9 +227,9 @@ incBy3();       // 6
 incBy3();       // 9
 ```
 
-Each instance of the inner `increaseCount()` function is closed over both the `count` and `step` variables from its outer `counter(..)` function's scope. `step` remains the same over time, but `count` is updated on each invocation of that inner function. Since closure is over the variables and not just snapshots of the values, these updates are preserved.
+Chaque instance de la fonction intérieure `increaseCount()` est fermée sur les variables `count` et `step` provenant de la portée de la fonction extérieure `counter(..)`. `step` reste le même dans le temps mais `count` est mis à jour à chaque appel de cette fonction intérieure. Comme la *closure* se fait sur les variables et n'est pas seulement un instantané des valeurs, ces mises à jour sont préservées.
 
-Closure is most common when working with asynchronous code, such as with callbacks. Consider:
+Les *closures* sont communes quand on travaille avec du code asynchrone comme avec les *callbacks*, considérez :
 
 ```js
 function getSomeData(url) {
@@ -245,9 +244,9 @@ getSomeData("https://some.url/wherever");
 // Response (from https://some.url/wherever): ...
 ```
 
-The inner function `onResponse(..)` is closed over `url`, and thus preserves and remembers it until the Ajax call returns and executes `onResponse(..)`. Even though `getSomeData(..)` finishes right away, the `url` parameter variable is kept alive in the closure for as long as needed.
+La fonction intérieure `onResponse(..)` est fermée sur `url` et donc la préserve et s'en souvient jusqu'à ce que l'appel Ajax retourne et éxécute `onResponse(..)`. Bien que `getSomeData(..)` termine son éxécution immédiatement, le paramètre `url` est gardé en vie dans la *closure* tant qu'on en a besoin.
 
-It's not necessary that the outer scope be a function—it usually is, but not always—just that there be at least one variable in an outer scope accessed from an inner function:
+Ce n'est pas nécessairement que la portée extérieure est une fonction même si c'est souvent le cas, il faut juste une variable d'une portée extérieure accessible et utilisée dans une fonction intérieure :
 
 ```js
 for (let [idx,btn] of buttons.entries()) {
@@ -256,28 +255,27 @@ for (let [idx,btn] of buttons.entries()) {
     });
 }
 ```
+ Parce que cette boucle utilise la déclaration `let`, chaque itération a des variables `idx` and `btn`  avec une nouvelle portée de bloc (alias locale). La boucle crée aussi une nouvelle fonction intérieure `onClick(..)` à chaque fois. Celle-ci ferme sur `idx`, la préservant ainsi aussi longtemps que le gestionnaire de clic est en place sur le `btn`. Donc quand chacun des boutons est cliqué, son contrôleur peut affichier la valeur index associée car il se souvient de sa variable `idx`.
 
-Because this loop is using `let` declarations, each iteration gets new block-scoped (aka, local) `idx` and `btn` variables;  the loop also creates a new inner `onClick(..)` function each time. That inner function closes over `idx`, preserving it for as long as the click handler is set on the `btn`. So when each button is clicked, its handler can print its associated index value, because the handler remembers its respective `idx` variable.
+Souvenez vous : cette *closure* ne se fait pas sur la valeur (like `1` or `3`) mais sur la variable `idx` elle-même.
 
-Remember: this closure is not over the value (like `1` or `3`), but over the variable `idx` itself.
+La *closure* est l'un modèle de programmation les plus importants quel que soit le langage. C'est spécialement vrai en JS où il est difficile de penser pouvoir faire quelque chose d'utile sans tirer partie des *closures* d'une façon ou d'une autre.
 
-Closure is one of the most prevalent and important programming patterns in any language. But that's especially true of JS; it's hard to imagine doing anything useful without leveraging closure in one way or another.
-
-If you're still feeling unclear or shaky about closure, the majority of Book 2, *Scope & Closures* is focused on the topic.
+Si vous vous sentez toujours incertain et troublé par les *closures*, la majorité du livre 2, *Scope & Closures* est focalisé sur cette question.
 
 ## `this` Keyword
 
-One of JS's most powerful mechanisms is also one of its most misunderstood: the `this` keyword. One common misconception is that a function's `this` refers to the function itself. Because of how `this` works in other languages, another misconception is that `this` points the instance that a method belongs to. Both are incorrect.
+L'un des mécanismes les plus puissants du JS est aussi l'un des moins bien compris : le mot-clé `this`. Une incompréhension commune repose dans le fait que le `this` d'une fonction fait référence à la fonction elle-même. En raison de la façon dont le `this` fonctionne dans d'autres langages, une autre incompréhension repose dans le fait que `this` pointe vers une instance à laquelle une méthode appartient. Les deux sont incorrectes.
 
-As discussed previously, when a function is defined, it is *attached* to its enclosing scope via closure. Scope is the set of rules that controls how references to variables are resolved.
+Comme présenté précédemment, quand une fonction est définie, elle est *attachée* à sa portée englobante via la *closure*. La portée est l'ensemble des règles qui controlent la façon dont les références aux variables sont résolues.
 
-But functions also have another characteristic besides their scope that influences what they can access. This characteristic is best described as an *execution context*, and it's exposed to the function via its `this` keyword.
+Mais les fonctions ont aussi une autre caractéristique en plus de leur portée qui influence ce à quoi elles ont accès. Cette caractéristique est ce qu'on pourrait appeler un *contexte d'éxécution* et il est exposé à la fonction via son mot-clé `this`.
 
-Scope is static and contains a fixed set of variables available at the moment and location you define a function, but a function's execution *context* is dynamic, entirely dependent on **how it is called** (regardless of where it is defined or even called from).
+La portée est statique et contient un ensemble fixe de variables à disposition au moment et l'endroit où vous l'avez définie, mais le contexte d'éxécution est dynamique, entièrement dépendant de **la façon dont elle est appelée** (quel que soit l'endroit où elle a été définie ou appelée).
 
-`this` is not a fixed characteristic of a function based on the function's definition, but rather a dynamic characteristic that's determined each time the function is called.
+`this` n'est pas une caractéristique fixe d'une fonction basée sur sa définition mais plutôt une caractéristique dynamique déterminée à chaque fois que la fonction est appelée.
 
-One way to think about the *execution context* is that it's a tangible object whose properties are made available to a function while it executes. Compare that to scope, which can also be thought of as an *object*; except, the *scope object* is hidden inside the JS engine, it's always the same for that function, and its *properties* take the form of identifier variables available inside the function.
+Une façon de voir le contexte d'éxécution est de se le représenter comme un objet dont les propriétés sont rendues disponible à une fonction au moment où elle s'éxécute. Comparé à la portée, qui peut également être perçue comme un objet - sauf que celui-ci serait caché dans le moteur JS - mais qui est toujours la même pour cette fonction et ses propriétés prennent la forme de variables disponibles dans la fonction.
 
 ```js
 function classroom(teacher) {
@@ -290,24 +288,26 @@ function classroom(teacher) {
 var assignment = classroom("Kyle");
 ```
 
-The outer `classroom(..)` function makes no reference to a `this` keyword, so it's just like any other function we've seen so far. But the inner `study()` function does reference `this`, which makes it a `this`-aware function. In other words, it's a function that is dependent on its *execution context*.
+La fonction extérieure `classroom(..)` ne fait pas référence au mot-clé `this` donc elle est similaire aux fonctions vues jusqu'à maintenant. Par contre, la fonction intérieure` study()` référence `this` ce qui en fait une fonction consciente du `this`. En d'autres termes, c'est une fonction dépendante de son contexte d'éxécution.
 
 | NOTE: |
 | :--- |
-| `study()` is also closed over the `teacher` variable from its outer scope. |
+| `study()` est aussi fermée sur la variable `teacher`. |
 
-The inner `study()` function returned by `classroom("Kyle")` is assigned to a variable called `assignment`. So how can `assignment()` (aka `study()`) be called?
+La fonction intérieure `study()` retournée par `classroom("Kyle")` est assignée à la variable `assignment`. Donc comment `assignment()` (alias `study()`) peut-être appelée ?
+
 
 ```js
 assignment();
 // Kyle says to study undefined  -- Oops :(
 ```
 
+Dans cet extrait, on appelle `assignment()` comme une fonction classique, sans fournir de contexte d'éxécution.
+
+Comme le programme n'est pas en mode strict (voir le chapitre 1, "Strictly Speaking"), les fonctions consciente du contexte qui sont appelées sans le spécifier définissent l'objet global comme contexte par défaut (`window` dans un navigateur). Comme il n'y a pas de variable globale nommée `topic` (et donc pas de telle propriété dans l'objet global), `this.topic` est résolu en `undefined`.
 In this snippet, we call `assignment()` as a plain, normal function, without providing it any *execution context*.
 
-Since this program is not in strict mode (see Chapter 1, "Strictly Speaking"), context-aware functions that are called **without any context specified** default the context to the global object (`window` in the browser). As there is no global variable named `topic` (and thus no such property on the global object), `this.topic` resolves to `undefined`.
-
-Now consider:
+Maintenant considérez :
 
 ```js
 var homework = {
@@ -319,9 +319,9 @@ homework.assignment();
 // Kyle says to study JS
 ```
 
-A copy of the `assignment` function reference is set as a property on the `homework` object, and then it's called as `homework.assignment()`. That means the `this` for that function call will be the `homework` object. Hence, `this.topic` resolves to `"JS"`.
+Une copie de la référence de la fonction `assignment` est définie comme une propriété de l'objet `homework` et est ensuite appelée `homework.assignment()`. Cela signifie que `this` pour cet appel de fonction sera l'objet `homework`. Ainsi, `this.topic` se résoud en `"JS"`.
 
-Lastly:
+Enfin :
 
 ```js
 var otherHomework = {
@@ -332,23 +332,23 @@ assignment.call(otherHomework);
 // Kyle says to study Math
 ```
 
-A third way to invoke a function is with the `call(..)` method, which takes an object (`otherHomework` here) to use for setting the `this` reference for the function call. The property reference `this.topic` resolves to `"Math"`.
+Une troisième façon d'invoquer une fonction est avec la méthode `call(..)` qui prend un objet (`otherHomework` ici) pour utiliser comme paramètre la référence `this` pour cet appel. La référence de propriété `this.topic` est résolue en `"Math"`.
 
-The same context-aware function invoked three different ways, gives different answers each time for what object `this` will reference.
+La même fonction consciente de son contexte est invoquée de trois façons différentes et donne des réponses différentes à chaque fois en fonction de l'objet auquel fait référence le `this`
 
-The benefit of `this`-aware functions—and their dynamic context—is the ability to more flexibly re-use a single function with data from different objects. A function that closes over a scope can never reference a different scope or set of variables. But a function that has dynamic `this` context awareness can be quite helpful for certain tasks.
+Le bénifice de ces fonctions est la faculté à être plus flexible et d'être réutilisée avec des données de différents objets. Une fonction qui ferme sur une portée ne peut jamais faire référence à une portée différente ou un ensemble de variables. Mais une fonction qui a un `this` dynamique conscient de son contexte peut-être très utile pour certaines tâches.
 
 ## Prototypes
 
-Where `this` is a characteristic of function execution, a prototype is a characteristic of an object, and specifically resolution of a property access.
+Là où `this` est une caractéristique de l'éxécution de la fonction, un prototype est une caractéristique d'un objet et plus spécifiquement la résolution de l'accès à une propriété.
 
-Think about a prototype as a linkage between two objects; the linkage is hidden behind the scenes, though there are ways to expose and observe it. This prototype linkage occurs when an object is created; it's linked to another object that already exists.
+Pensez au prototype comme un lien entre deux objets caché en arrière-plan même s'il est possible de l'exposer et de l'observer. Ce lien se fait au moment où l'objet est créé, il est lié avec un autre objet qui existe déjà.
 
-A series of objects linked together via prototypes is called the "prototype chain."
+Une série d'objets liés ensemble via des prototypes s'appelle une "chaîne de prototype".
 
-The purpose of this prototype linkage (i.e., from an object B to another object A) is so that accesses against B for properties/methods that B does not have, are *delegated* to A to handle. Delegation of property/method access allows two (or more!) objects to cooperate with each other to perform a task.
+L'objectif de ce lien (par exemple d'un objet B vers un autre objet A) est que les accès à B pour les propriétés/méthodes que B n'a pas sont *délégués* à A. La délégation d'accès d'une propriété/méthode autorise deux (ou plus !) objets à coopérer l'un avec l'autre pour réaliser une tâche.
 
-Consider defining an object as a normal literal:
+Considérez définir un objet comme un litéral normal :
 
 ```js
 var homework = {
@@ -356,19 +356,18 @@ var homework = {
 };
 ```
 
-The `homework` object only has a single property on it: `topic`. However, its default prototype linkage connects to the `Object.prototype` object, which has common built-in methods on it like `toString()` and `valueOf()`, among others.
+L'objet `homework` a seulement une seule propriété : `topic`. Cependant, son lien de prototypage par défault se connecte à l'objet `Object.prototype` qui intègre des méthodes communes comme `toString()` et `valueOf()`, entre autres.
 
-We can observe this prototype linkage *delegation* from `homework` to `Object.prototype`:
+On peut observer la délégation du lien de prototypage de `homework` à `Object.prototype` :
 
 ```js
 homework.toString();    // [object Object]
 ```
+`homework.toString()` fonctionne même si `homework` n'a pas de méthode `toString()` définie. La délégation appelle en fait `Object.prototype.toString()`.
 
-`homework.toString()` works even though `homework` doesn't have a `toString()` method defined; the delegation invokes `Object.prototype.toString()` instead.
+### Liaison d'objets
 
-### Object Linkage
-
-To define an object prototype linkage, you can create the object using the `Object.create(..)` utility:
+Pour définir une liaison de prototype d'objet, vous pouvez créer un objet en utilisant l'utilitaire `Object.create(..)` :
 
 ```js
 var homework = {
@@ -380,9 +379,9 @@ var otherHomework = Object.create(homework);
 otherHomework.topic;   // "JS"
 ```
 
-The first argument to `Object.create(..)` specifies an object to link the newly created object to, and then returns the newly created (and linked!) object.
+Le premier argument de `Object.create(..)` spécifie un objet à lier au nouvel objet, la méthode retourne ensuite le nouvel (et lié) objet.
 
-Figure 4 shows how the three objects (`otherHomework`, `homework`, and `Object.prototype`) are linked in a prototype chain:
+La figure 4 montre comment les trois objets (`otherHomework`, `homework`, et `Object.prototype`) sont liés dans la chaîne de prototype :
 
 <figure>
     <img src="images/fig4.svg" width="200" alt="Prototype chain with 3 objects" align="center">
@@ -390,13 +389,15 @@ Figure 4 shows how the three objects (`otherHomework`, `homework`, and `Object.p
     <br><br>
 </figure>
 
-Delegation through the prototype chain only applies for accesses to lookup the value in a property. If you assign to a property of an object, that will apply directly to the object regardless of where that object is prototype linked to.
+La délégation au sein de la chaîne s'applique uniquement pour les accès 
+
+La délégation via la chaîne de prototypes s'applique uniquement aux accès pour rechercher la valeur dans une propriété. Si vous attribuez à une propriété d'un objet, cela s'appliquera directement à l'objet indépendamment de l'endroit où cet objet est lié au prototype.
 
 | TIP: |
 | :--- |
-| `Object.create(null)` creates an object that is not prototype linked anywhere, so it's purely just a standalone object; in some circumstances, that may be preferable. |
+| `Object.create(null)` crée un objet qui est lié à aucune liaison de prototypes, c'est purement un objet autonome. Dans certaines circonstances, cela peut-être préférable. |
 
-Consider:
+Considérez :
 
 ```js
 homework.topic;
@@ -413,9 +414,9 @@ homework.topic;
 // "JS" -- not "Math"
 ```
 
-The assignment to `topic` creates a property of that name directly on `otherHomework`; there's no effect on the `topic` property on `homework`. The next statement then accesses `otherHomework.topic`, and we see the non-delegated answer from that new property: `"Math"`.
+L'affectation de `topic` crée une propriété de ce nom directement dans `otherHomework`, il n'y a aucun effet sur la propriété `topic` dans `homework`. La prochaine déclaration accède à `otherHomework.topic` et on voit que la réponse est la nouvelle propriété : `"Math"`.
 
-Figure 5 shows the objects/properties after the assignment that creates the `otherHomework.topic` property:
+La figure 5 montre les objets/propriétés après l'affectation qui crée la propriété `otherHomework.topic` :
 
 <figure>
     <img src="images/fig5.svg" width="200" alt="3 objects linked, with shadowed property" align="center">
@@ -423,17 +424,18 @@ Figure 5 shows the objects/properties after the assignment that creates the `oth
     <br><br>
 </figure>
 
+Le `topic` dans `otherHomework` est *shadowing* la propriété du même dans l'objet `homework` de la chaîne.
 The `topic` on `otherHomework` is "shadowing" the property of the same name on the `homework` object in the chain.
 
 | NOTE: |
 | :--- |
-| Another frankly more convoluted but perhaps still more common way of creating an object with a prototype linkage is using the "prototypal class" pattern, from before `class` (see Chapter 2, "Classes") was added in ES6. We'll cover this topic in more detail in Appendix A, "Prototypal 'Classes'". |
+| Une autre façon franchement plus compliquée mais peut-être encore plus courante de créer un objet avec une liaison de prototype est d'utiliser le modèle de "classe prototypique", d'avant que "classe" (voir Chapitre 2, "Classes") ait été ajouté dans ES6. Nous aborderons ce sujet plus en détail dans l'annexe A, «Classes prototypiques». |
 
-### `this` Revisited
+### `this` revisité
 
-We covered the `this` keyword earlier, but its true importance shines when considering how it powers prototype-delegated function calls. Indeed, one of the main reasons `this` supports dynamic context based on how the function is called is so that method calls on objects which delegate through the prototype chain still maintain the expected `this`.
+Nous avons abordé le mot-clé `this` plus tôt mais sa vrai importance brille quand on considère comment il alimente les appels de fonctions délégués par prototype. En effent, l'une des raisons principales qui font que `this` supporte un contexte dynamique repose sur la façon dont la fonction est appelée est telle que la méthode fait appel à des objets qui délèguent à travers la chaîne de prototype et maintiennent toujours le `this` attendu.
 
-Consider:
+Considérez :
 
 ```js
 var homework = {
@@ -453,7 +455,7 @@ mathHomework.study();
 // Please study Math
 ```
 
-The two objects `jsHomework` and `mathHomework` each prototype link to the single `homework` object, which has the `study()` function. `jsHomework` and `mathHomework` are each given their own `topic` property (see Figure 6).
+Les deux objets `jsHomework` et `mathHomework` sont tout deux liés à l'objet `homework` qui comporte la fonction `study()`. `jsHomework` et `mathHomework` donnent tous les deux leur propre valeur à la propriété `topic` (voir la figure 6).
 
 <figure>
     <img src="images/fig6.svg" width="495" alt="4 objects prototype linked" align="center">
@@ -461,18 +463,18 @@ The two objects `jsHomework` and `mathHomework` each prototype link to the singl
     <br><br>
 </figure>
 
-`jsHomework.study()` delegates to `homework.study()`, but its `this` (`this.topic`) for that execution resolves to `jsHomework` because of how the function is called, so `this.topic` is `"JS"`. Similarly for `mathHomework.study()` delegating to `homework.study()` but still resolving `this` to `mathHomework`, and thus `this.topic` as `"Math"`.
+`jsHomework.study()` délègue à `homework.study()` mais son `this` (`this.topic`) pour cette éxécution est résolu par `jsHomework` en raison de la façon dont la fonction est appelée, `this.topic` est `"JS"`. 
 
-The preceding code snippet would be far less useful if `this` was resolved to `homework`. Yet, in many other languages, it would seem `this` would be `homework` because the `study()` method is indeed defined on `homework`.
+L'extrait de code ci-dessus serait beaucoup moins utile si `this` était résolu par `homework`. Pourtant, dans plein d'autres langages, il semblerait que `this` serait `homework` car la méthode `study()` est en effet définie par `homework`.
 
-Unlike many other languages, JS's `this` being dynamic is a critical component of allowing prototype delegation, and indeed `class`, to work as expected!
+Contrairement à beaucoup d'autres langages, le fait que le `this` de JS soit dynamique est un élément essentiel autorisant la délégation de prototypes (et en effet la `class`) à fonctionner comme prévu !
 
-## Asking "Why?"
+## Se demander "pourquoi ?"
 
-The intended take-away from this chapter is that there's a lot more to JS under the hood than is obvious from glancing at the surface.
+Le but de ce chapitre était de montrer qu'il y en a beaucoup plus sous le capot du JS qu'on pourrait le croire au premier coup d'oeil.
 
-As you are *getting started* learning and knowing JS more closely, one of the most important skills you can practice and bolster is curiosity, and the art of asking "Why?" when you encounter something in the language.
+Alors que vous continuer de débuter en apprenant et en connaissant JS de plus en plus, l'une des compétences les plus importante que vous pouvez pratiquer est la curiosité, l'art de demander "Pourquoi ?" quand vous rencontrer quelque chose dans un langage.
 
-Even though this chapter has gone quite deep on some of the topics, many details have still been entirely skimmed over. There's much more to learn here, and the path to that starts with you asking the *right* questions of your code. Asking the right questions is a critical skill of becoming a better developer.
+Même si ce chapitre est allé assez loin sur certains points, de nombreux détails ont été survolés. Il y a bien plus à apprendre ici et le début du chemin commence par votre capacité à poser la bonne question sur votre code. Se poser la bonne question est une compétence essentielle pour devenir un meilleur développeur.
 
-In the final chapter of this book, we're going to briefly look at how JS is divided, as covered across the rest of the *You Don't Know JS Yet* book series. Also, don't skip Appendix B of this book, which has some practice code to review some of the main topics covered in this book.
+Dans le dernier chapitre de ce livre, nous allons brièvement regarder la façon dont JS est divisé et abordé dans le reste des livres de la série. Aussi, ne sauter pas l'annexe B de ce livre qui contient de la mise en pratique pour revoir certains des sujets abordés dans ce livre.
